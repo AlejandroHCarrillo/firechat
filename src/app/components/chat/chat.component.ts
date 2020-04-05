@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service'
-import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-chat',

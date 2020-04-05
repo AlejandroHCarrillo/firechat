@@ -3,14 +3,51 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { Mensaje } from '../interfaces/mensaje.interface'
 import { map } from "rxjs/operators";
 
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private itemsCollection: AngularFirestoreCollection<Mensaje>;
   public chats: Mensaje[] = [];
+  public usuario: any = {};
   
-  constructor(private afs: AngularFirestore) {  }
+  constructor(private afs: AngularFirestore, 
+              public afAuth: AngularFireAuth) {
+                this.afAuth.authState.subscribe( user => {
+                  
+                  if (!user){
+                    return;
+                  }
+                  console.log( 'Estado del usuario', user );
+
+                  this.usuario.nombre = user.displayName;
+                  this.usuario.uid = user.uid;
+
+                })
+
+              }
+
+  login(proveedor:string) {
+    switch (proveedor) {
+      case 'google':
+        this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());        
+        break;
+      case 'twitter':
+          this.afAuth.auth.signInWithPopup(new firebase.auth.TwitterAuthProvider());        
+          break;      
+      default:
+        console.log('Autenticador desconocido');
+        break;
+    }
+  }
+
+  logout() {
+    this.usuario = {};
+    this.afAuth.auth.signOut();
+  }
 
   cargarMensajes(){
     this.itemsCollection = this.afs.collection<Mensaje>('chats', ref => ref.orderBy('fecha', 'desc')
