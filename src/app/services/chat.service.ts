@@ -21,11 +21,12 @@ export class ChatService {
                   if (!user){
                     return;
                   }
-                  console.log( 'Estado del usuario', user );
+                  // console.log( 'Estado del usuario', user );
 
                   this.usuario.nombre = user.displayName;
                   this.usuario.uid = user.uid;
-
+                  this.usuario.photoURL = user.photoURL;
+                  
                 })
 
               }
@@ -65,10 +66,10 @@ export class ChatService {
 
   agregarMensaje( texto:string ){
     let mensaje:Mensaje = {
-      nombre: "Alex",
+      nombre: this.usuario.nombre,
       mensaje: texto, 
       fecha: new Date().getTime(),
-      uid: "TODO: Agregar al hacer la autentificacion"
+      uid: this.usuario.uid
     }
 
     return this.itemsCollection.add(mensaje);

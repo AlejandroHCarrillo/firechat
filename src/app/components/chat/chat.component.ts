@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit {
   }
 
   enviar_mensaje(){
-    console.log(this.mensaje);
+    // console.log(this.mensaje);
     if(this.mensaje.length === 0){
       return;
     }
